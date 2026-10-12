@@ -1,0 +1,10 @@
+"use client";
+import { useEffect, useState } from "react";
+type RequestItem={_id:string;name:string;email:string;reason:string;createdAt:string};
+export default function ContributorRequests(){
+ const [items,setItems]=useState<RequestItem[]>([]);const [message,setMessage]=useState("");
+ async function refresh(){const r=await fetch("/api/admin/contributors",{cache:"no-store"});const d=await r.json();if(!r.ok)throw new Error(d.error||"Could not load requests");setItems(d.data||[])}
+ useEffect(()=>{refresh().catch(e=>setMessage(e.message))},[]);
+ async function decide(id:string,decision:"approve"|"reject"){try{const r=await fetch("/api/admin/contributors",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,decision})});const d=await r.json();if(!r.ok)throw new Error(d.error||"Action failed");setMessage(decision==="approve"?"Contributor approved.":"Request rejected.");await refresh()}catch(e){setMessage(e instanceof Error?e.message:"Action failed")}}
+ return <section className="mt-8 rounded-2xl border border-[#EAD9BD] bg-white p-5 sm:p-7"><h2 className="text-xl font-black text-[#571E24]">Community contributor requests</h2><p className="mt-2 text-sm text-[#80675E]">Approve only people you trust. Approved contributors can submit media, but their uploads remain unpublished until an admin reviews them.</p>{message&&<p className="mt-3 rounded-lg bg-[#FFF2D8] p-3 text-sm">{message}</p>}<div className="mt-4 space-y-3">{items.map(i=><article key={i._id} className="rounded-xl border border-[#EAD9BD] p-4"><h3 className="font-bold text-[#571E24]">{i.name} · {i.email}</h3><p className="mt-2 text-sm text-[#80675E]">{i.reason}</p><div className="mt-3 flex gap-2"><button onClick={()=>decide(i._id,"approve")} className="rounded-lg bg-green-700 px-3 py-2 text-sm font-bold text-white">Approve</button><button onClick={()=>decide(i._id,"reject")} className="rounded-lg border border-red-200 px-3 py-2 text-sm font-bold text-red-700">Reject</button></div></article>)}{items.length===0&&<p className="text-sm text-[#80675E]">No pending requests.</p>}</div></section>
+}

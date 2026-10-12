@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fff9ee;
+  --foreground: #321b1a;
+  --festival-red: #741925;
+  --festival-saffron: #e9a23b;
+  --festival-gold: #f5c66f;
+  --festival-cream: #fff9ee;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; max-width: 100%; overflow-x: clip; }
+body { width: 100%; max-width: 100%; overflow-x: clip; }
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: #f5c66f; color: #571e24; }
+a { text-decoration: none; }
+button, a { -webkit-tap-highlight-color: transparent; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile-first layout safeguards: horizontal carousels scroll inside their own
+   containers instead of expanding the entire page beyond the viewport. */
+img, video, iframe { max-width: 100%; }
+section { min-width: 0; }
+input, select, textarea, button { max-width: 100%; }
+@media (max-width: 640px) {
+  h1, h2, h3, h4 { overflow-wrap: anywhere; }
+  section { scroll-margin-top: 76px; }
+}
+
+
+
+/* Interaction feedback: desktop hover, visible pointer, and press states.
+   Touch devices get press feedback without sticky hover effects. */
+button, [role="button"], summary { cursor: pointer; }
+button:disabled, button[aria-disabled="true"], [role="button"][aria-disabled="true"] {
+  cursor: not-allowed;
+}
+a, button, [role="button"], summary {
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 180ms ease,
+    transform 140ms ease,
+    opacity 160ms ease,
+    filter 160ms ease;
+}
+a:focus-visible, button:focus-visible, [role="button"]:focus-visible, summary:focus-visible {
+  outline: 3px solid #e9a23b;
+  outline-offset: 3px;
+}
+button:not(:disabled):active, a:active, [role="button"]:active, summary:active {
+  transform: scale(0.975);
+}
+@media (hover: hover) and (pointer: fine) {
+  a:hover, button:not(:disabled):hover, [role="button"]:hover, summary:hover {
+    filter: brightness(0.96);
+  }
+  button:not(:disabled):hover, a:hover, [role="button"]:hover {
+    box-shadow: 0 5px 14px rgb(50 27 26 / 10%);
+  }
+  .admin-dashboard-card:hover {
+    transform: translateY(-3px);
+    border-color: #d9b77e;
+    box-shadow: 0 12px 26px rgb(50 27 26 / 10%);
+  }
+}
+@media (hover: none), (pointer: coarse) {
+  button:not(:disabled):active, a:active, [role="button"]:active {
+    filter: brightness(0.92);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  a, button, [role="button"], summary, .admin-dashboard-card {
+    transition: none !important;
+  }
+  button:not(:disabled):active, a:active, [role="button"]:active {
+    transform: none !important;
+  }
+}
